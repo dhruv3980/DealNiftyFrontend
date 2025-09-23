@@ -58,6 +58,9 @@ const UserDashboard = ({ user }) => {
   }
 
   function adminDetails(){
+    menuvisible()
+    navigate('/admin/dashboard')
+
 
   }
 

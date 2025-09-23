@@ -19,7 +19,7 @@ const Payment = () => {
 
   const completePayment = async (amount) => {
     try {
-      const { data } = await axios.get(`${link}/getkey`, {
+      const {data} = await axios.get(`${link}/getkey`, {
         withCredentials: true,
       });
 
@@ -47,7 +47,7 @@ const Payment = () => {
             razorpay_order_id: response.razorpay_order_id,
             razorpay_signature: response.razorpay_signature,
           });
-          console.log(data);
+          
 
           if (data.success) {
             navigate(`/paymentSuccess?.reference=${data.reference}`);

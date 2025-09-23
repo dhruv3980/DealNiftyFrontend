@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import "../UserStyles/Profile.css";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, Navigate } from "react-router-dom";
-import Loader from "../components/Loader";
-import { getProfile } from "../features/User/UserSlice";
+// import Loader from "../components/Loader";
+// import { getProfile } from "../features/User/UserSlice";
 import Pagetitle from "../components/Pagetitle";
 
 const Profile = () => {

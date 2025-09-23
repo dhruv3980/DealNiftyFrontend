@@ -7,7 +7,7 @@ const link = import.meta.env.VITE_API_URL
 export const Additemtocart = createAsyncThunk('Additemtocart/cart', async({id, quantity}, {rejectWithValue})=>{
     try{
        
-         const {data} = await axios.get(`${link}/product/${id}`);
+        const {data} = await axios.get(`${link}/product/${id}`);
         
         return {
             product:data.data._id,
@@ -49,7 +49,7 @@ const cartSlice = createSlice({
         },
 
         removeItemFromCart:(state, action)=>{
-            console.log(action.payload)
+            
             
             state.removingId=action.payload;
             state.cartItems = state.cartItems.filter(item=>item.product!=action.payload);
@@ -61,6 +61,13 @@ const cartSlice = createSlice({
         saveShippingInfo:(state,action)=>{
             state.shippingInfo=action.payload
             localStorage.setItem(`shippingInfo`, JSON.stringify(state.shippingInfo))
+        },
+        
+        clearCart:(state)=>{
+            state.cartItems=[]
+            state.shippingInfo = {};
+            localStorage.removeItem('cartItem')
+            localStorage.removeItem('shippingInfo')
         }
     },
 
@@ -110,7 +117,7 @@ const cartSlice = createSlice({
     
 })
 
-export const {removeError, removeSuccess, removemessage, removeItemFromCart, saveShippingInfo} = cartSlice.actions;
+export const {removeError, removeSuccess, removemessage, removeItemFromCart, saveShippingInfo, clearCart} = cartSlice.actions;
 
 export default cartSlice.reducer;
 

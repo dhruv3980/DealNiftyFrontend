@@ -40,7 +40,7 @@
 
 .menu-option-btn {
     width: 100%;
-    padding: 12px;
+    padding: 10px;
     margin-bottom: 10px;
     border: none;
     border-radius: 8px;
@@ -98,7 +98,7 @@
 
     .profile-header {
         top: 5px;
-        right: -40px;
+        right: -48px;
     }
     
     .profile-avatar {

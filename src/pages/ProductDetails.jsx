@@ -6,20 +6,37 @@ import Navbar from "../components/Navbar";
 import Rating from "../components/Rating";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import {getProductDetail,removeErrors,} from "../features/products/Product.Slice";
+import {
+  getProductDetail,
+  removeErrors,
+} from "../features/products/Product.Slice";
 import Loader from "../components/Loader";
 import { ContactSupport } from "@mui/icons-material";
 import { toast } from "react-toastify";
-import  { removemessage, removeSuccess, Additemtocart,removeError }  from '../features/Cart/cartSlice'
-
+import {
+  removemessage,
+  removeSuccess,
+  Additemtocart,
+  removeError,
+} from "../features/Cart/cartSlice";
+import { createReview } from "../features/products/Product.Slice";
 const ProductDetails = () => {
   const [userRating, setUserRating] = useState(0);
-  const { product, loading, error } = useSelector((state) => state.product);
+  const { product, loading, error, reviewSuccess, reviewLoading } = useSelector(
+    (state) => state.product
+  );
 
-  const {loading:cartLoading, error:cartError, success, message, cartItems} = useSelector(state=>state.cart);
-  console.log(cartItems)
+  const {
+    loading: cartLoading,
+    error: cartError,
+    success,
+    message,
+    cartItems,
+  } = useSelector((state) => state.cart);
 
   const [quantity, setquantity] = useState(1);
+
+  const [comment, setComment] = useState("");
 
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -41,44 +58,24 @@ const ProductDetails = () => {
       dispatch(removeErrors());
     }
 
-    if(cartError){
-      toast.error(cartError, {autoClose:2000})
+    if (cartError) {
+      toast.error(cartError, { autoClose: 2000 });
       dispatch(removeError());
     }
-
-    
   }, [dispatch, error, cartError]);
 
-  useEffect(()=>{
-    if(success){
-      toast.success(message, {autoClose:2000})
+  useEffect(() => {
+    if (success) {
+      toast.success(message, { autoClose: 2000 });
       dispatch(removemessage());
 
       dispatch(removeSuccess());
     }
-  }, [dispatch, success, message])
-
-  if (loading) {
-    return (
-      <>
-        <Loader />
-      </>
-    );
-  }
+  }, [dispatch, success, message]);
 
   const handleRatingChange = (newRating) => {
     setUserRating(newRating);
   };
-
-  if (error || !product) {
-    return (
-      <>
-        <Pagetitle title="Product Detalis" />
-        <Navbar />
-        <Footer />
-      </>
-    );
-  }
 
   function handlechangequantitydecrease() {
     if (quantity <= 1) {
@@ -98,13 +95,53 @@ const ProductDetails = () => {
     setquantity((prev) => prev + 1);
   }
 
-  function addItemToCart(){
-   
-    dispatch(Additemtocart({id,quantity}));
-
+  function addItemToCart() {
+    dispatch(Additemtocart({ id, quantity }));
   }
 
+  const handleReviewSubmit = (e) => {
+    e.preventDefault();
+    if (!userRating) {
+      toast.error("Please Select a rating ", { autoClose: 2000 });
+      return;
+    }
 
+    dispatch(
+      createReview({
+        rating: userRating,
+        comment,
+        productid: id,
+      })
+    );
+  };
+
+  useEffect(() => {
+    if (reviewSuccess) {
+      toast.success("Review Submitting Successfully", { autoClose: 2000 });
+      setUserRating(0);
+      setComment("");
+      dispatch(removeSuccess());
+      dispatch(getProductDetail(id));
+    }
+  }, [dispatch, reviewSuccess, id]);
+
+  if (loading) {
+    return (
+      <>
+        <Loader />
+      </>
+    );
+  }
+
+  if (error || !product) {
+    return (
+      <>
+        <Pagetitle title="Product Detalis" />
+        <Navbar />
+        <Footer />
+      </>
+    );
+  }
 
   return (
     <>
@@ -167,12 +204,18 @@ const ProductDetails = () => {
               </div>
             )}
 
-            <button className="add-to-cart-btn" onClick={addItemToCart} disabled={cartLoading}>{cartLoading?'Adding':'Add To Cart'}</button>
+            <button
+              className="add-to-cart-btn"
+              onClick={addItemToCart}
+              disabled={cartLoading}
+            >
+              {cartLoading ? "Adding" : "Add To Cart"}
+            </button>
 
-            <form className="review-form">
+            <form className="review-form" onSubmit={handleReviewSubmit}>
               <h3>Write a Review</h3>
               <Rating
-                value={0}
+                value={userRating}
                 disabled={false}
                 onRatingChange={handleRatingChange}
               />
@@ -180,9 +223,15 @@ const ProductDetails = () => {
               <textarea
                 name=""
                 placeholder="Write your review here.."
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
                 className="review-input"
+                required
               ></textarea>
-              <button className="submit-review-btn">Submit Review</button>
+              <button className="submit-review-btn" disabled={reviewLoading}>
+                {" "}
+                {reviewLoading ? "Submitting Review..." : "Submit Review"}
+              </button>
             </form>
           </div>
         </div>
@@ -193,7 +242,7 @@ const ProductDetails = () => {
         {product.reviews && product.reviews.length > 0 ? (
           <div className="reviews-section">
             {product.reviews.map((review, idx) => (
-              <div className="review-item">
+              <div className="review-item" key={idx}>
                 <div className="review-header">
                   <Rating value={review.rating} disabled={true} />
                 </div>

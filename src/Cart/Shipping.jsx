@@ -118,7 +118,7 @@ const Shipping = () => {
               >
                 <option value="">Select a Country</option>
                 {Country &&
-                  Country.getAllCountries().map((item, idx) => (
+                  Country.getAllCountries().map((item) => (
                     <option value={item.isoCode} key={item.isoCode}>
                       {item.name}
                     </option>
@@ -142,7 +142,8 @@ const Shipping = () => {
                 >
                   <option value="">Select a state</option>
                   {State &&
-                    State.getStatesOfCountry(country).map((item, idx) => (
+                    State.getStatesOfCountry(country).map((item) => (
+                     
                       <option value={item.isoCode} key={item.isoCode}>
                         {item.name}
                       </option>
@@ -163,8 +164,8 @@ const Shipping = () => {
               >
                 <option value="">Select a city</option>
                 {City &&
-                  City.getCitiesOfState(country, state).map((item, idx) => (
-                    <option value={item.isoCode} key={item.isoCode}>
+                  City.getCitiesOfState(country, state).map((item) => (
+                    <option value={item.name} key={item.name}>
                       {item.name}
                     </option>
                   ))}

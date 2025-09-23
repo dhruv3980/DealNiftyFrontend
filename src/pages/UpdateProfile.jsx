@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import image from "../images/4.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import { getProfile, removeSuccess, updateProfile } from "../features/User/UserSlice";
-import Loader from "../components/Loader";
+
 import { removeErrors } from "../features/products/Product.Slice";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -42,10 +42,12 @@ const UpdateProfile = () => {
   function formsubmit(e) {
     e.preventDefault();
     const formData = new FormData();
+    
 
     if (!email || !name ) {
       return;
     }
+    console.log('called')
 
     formData.set("email", email);
     formData.set("name", name);
@@ -58,10 +60,7 @@ const UpdateProfile = () => {
     dispatch(updateProfile(formData));
   }
 
-  if (loading) {
-    return <Loader />;
-  }
-
+ 
   useEffect(() => {
     if (success) {
       toast.success(message, { autoClose: 2000 });
@@ -117,7 +116,7 @@ const UpdateProfile = () => {
             />
           </div>
 
-          <button className="authBtn">Update</button>
+          <button className="authBtn">{loading?'update':'Updated....'}</button>
         </form>
       </div>
     </div>

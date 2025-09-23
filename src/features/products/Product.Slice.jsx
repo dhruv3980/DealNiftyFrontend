@@ -5,6 +5,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 export const getProduct = createAsyncThunk("product/getProduct",async ({ keyword, page = 1, category }, { rejectWithValue }) => {
     try {
 
+      
           let link = `${API_URL}/products?page=${page}`;
           if (category) {
             link += `&category=${category}`;
@@ -14,7 +15,7 @@ export const getProduct = createAsyncThunk("product/getProduct",async ({ keyword
           }
 
           const { data } = await axios.get(link);
-
+         
           return data;
     } 
     catch (error) {
@@ -43,6 +44,34 @@ export const getProductDetail = createAsyncThunk(
   }
 );
 
+
+// Submit Review
+
+
+export const createReview= createAsyncThunk(
+  `product/createReview`,
+  async ({rating, comment, productid}, { rejectWithValue }) => {
+    try {
+      const config = {
+        headers:{
+          'Content-Type':'application/json',
+        
+        },
+        withCredentials:true
+      }
+      const link = `${API_URL}/review`;
+
+      const { data } = await axios.put(link, {rating, comment, productid}, config);
+
+      return data;
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data || { message: "An Error Occured" }
+      );
+    }
+  }
+);
+
 const productSlice = createSlice({
   name: "product",
 
@@ -55,12 +84,18 @@ const productSlice = createSlice({
 
     resultPerPage: 4,
     totalPages: 0,
+    reviewSuccess:false,
+    reviewLoading:false
   },
 
   reducers: {
     removeErrors: (state) => {
       state.error = null;
     },
+    removeSuccess:(state)=>{
+      state.reviewSuccess=false
+    }
+
   },
 
   extraReducers: (builder) => {
@@ -97,20 +132,40 @@ const productSlice = createSlice({
       .addCase(getProductDetail.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        console.log(action.payload.data);
+       
         state.product = action.payload?.data;
       })
       .addCase(getProductDetail.rejected, (state, action) => {
         state.loading = false;
 
-        console.log(action.payload);
+        
         state.error =
           action.payload.message ||
           "Something went wrong file fatching product detail";
       });
+
+
+      builder
+      .addCase(createReview.pending, (state, action) => {
+        state.reviewLoading = true;
+        state.error = null;
+      })
+      .addCase(createReview.fulfilled, (state, action) => {
+        state.reviewLoading = false;
+        state.reviewSuccess = true;
+        
+     
+      })
+      .addCase(createReview.rejected, (state, action) => {
+        state.reviewLoading = false;
+
+        state.error =
+          action.payload?.message ||
+          "Something went wrong file creating review";
+      });
   },
 });
 
-export const { removeErrors } = productSlice.actions;
+export const { removeErrors, removeSuccess } = productSlice.actions;
 
 export default productSlice.reducer;

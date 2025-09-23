@@ -54,9 +54,9 @@ const Products = () => {
     }
   }, [error, dispatch]);
 
-  if (loading) {
-    return <Loader />;
-  }
+  // if (loading) {
+  //   return <Loader />;
+  // }
 
   const handlePageChange = (page) => {
     if (currentPage != page) {
@@ -76,12 +76,15 @@ const Products = () => {
     }
   };
 
+
+
   const handleCategoryClick = (category) => {
     const newsearchParams = new URLSearchParams(location.search);
     newsearchParams.set("category", category);
     newsearchParams.delete("page");
     navigate(`?${newsearchParams.toString()}`);
   };
+ 
   return (
     <div>
       <Pagetitle title={"All Products"}></Pagetitle>

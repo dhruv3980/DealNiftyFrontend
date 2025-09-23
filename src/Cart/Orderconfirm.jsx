@@ -68,7 +68,7 @@ const Orderconfirm = () => {
 
           <table className="confirm-table cart-table">
             <caption> Cart Items</caption>
-
+            <thead>
             <tr>
               <th>Image</th>
               <th>Product Name</th>
@@ -76,6 +76,7 @@ const Orderconfirm = () => {
               <th>Quantity</th>
               <th>Total Price</th>
             </tr>
+            </thead>
 
             <tbody>
               {cartItems.map((item) => (

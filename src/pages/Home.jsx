@@ -11,7 +11,7 @@ import Loader from "../components/Loader";
 import { toast } from "react-toastify";
 
 const Home = () => {
-  const { loading, error, products, productCount } = useSelector(
+  const { loading, error, products, productCount} = useSelector(
     (state) => state.product
   );
   const dispatch = useDispatch();
@@ -31,9 +31,9 @@ const Home = () => {
     }
   }, [error, dispatch]);
 
-  if (loading) {
-    return <Loader />;
-  }
+  // if (loading) {
+  //   return <Loader />;
+  // }
 
   return (
     <>
