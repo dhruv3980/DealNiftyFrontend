@@ -76,13 +76,13 @@ const ProductList = () => {
                 <td>{item.createdAt.toString().slice(0,10)}</td>
                 <td>
                   <Link
-                    to={`/admin/product/:${item._id}`}
+                    to={`/admin/product/${item._id}`}
                     className="action-icon edit-icon"
                   >
                     <Edit />
                   </Link>
                   <Link
-                    to={`/admin/product/:${item._id}`}
+                    to={`/admin/product/${item._id}`}
                     className="action-icon delete-icon"
                   >
                     <Delete />

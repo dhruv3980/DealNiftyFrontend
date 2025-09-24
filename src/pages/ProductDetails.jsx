@@ -37,6 +37,9 @@ const ProductDetails = () => {
   const [quantity, setquantity] = useState(1);
 
   const [comment, setComment] = useState("");
+  const [selectingImage, setSelectingImage]=useState("")
+
+  console.log(product)
 
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -143,6 +146,7 @@ const ProductDetails = () => {
     );
   }
 
+  console.log(selectingImage)
   return (
     <>
       <Pagetitle title={`${product.name}-Details`} />
@@ -152,10 +156,19 @@ const ProductDetails = () => {
         <div className="product-detail-container">
           <div className="product-image-container">
             <img
-              src={product.images[0].url}
+              src={selectingImage?selectingImage:product.images[0].url}
               alt="product-title"
               className="product-detail-image"
             />
+           {product.images?.length>1 && <div className="product-thumbnails">
+              {
+                product && product.images && 
+                product.images.map((img, idx)=>(
+                  <img src={img.url} alt="thumbnail" className='thumbnail-image' onClick={e=>setSelectingImage(e.target.src)} />
+                ))
+              }
+
+            </div>}
           </div>
 
           <div className="product-info">
