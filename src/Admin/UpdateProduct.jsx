@@ -73,11 +73,22 @@ useEffect(() => {
 
     function handleformSubmit(e){
         e.preventDefault();
+         // Validate all fields
+        if(!name || !price || !description || !stock || !category){
+             toast.error("Please fill all the fields", {autoClose:2000});
+            return;
+        }
+
+        if(images.length === 0){
+            toast.error("Please select at least one image", {autoClose:2000});
+             return;
+        }
+
         const myform = new FormData()
         myform.set('name', name)
-        myform.set('price', price)
+        myform.set('price', Number(price))
         myform.set('descripiton', description)
-        myform.set('stock', stock)
+        myform.set('stock', Number(stock))
         myform.set('category', category)
        
 
@@ -97,7 +108,7 @@ useEffect(() => {
         }
         if(updateError){
             toast.error(updateError, {autoClose:2000})
-            dispatch(updateRemoveSuccess())
+            dispatch(updateRemoveErrors())
             
 
         }
@@ -142,7 +153,7 @@ useEffect(() => {
             <div className='update-product-preview-wrapper'>
                {
                 imagePreview && imagePreview.map((img, idx)=>(
-                     <img src={img} alt="Product preview"  className='update-product-preview-image' value={imagePreview} key={idx} />
+                     <img src={img} alt="Product preview"  className='update-product-preview-image'  key={idx} />
                 ))
                }
            </div>

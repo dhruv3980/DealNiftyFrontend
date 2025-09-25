@@ -6,11 +6,15 @@ import { Delete, Edit } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import "../AdminStyles/ProductsList.css";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchALLProducts, removeErrors } from "../features/Admin/adminSlice";
+import { deleteProduct, fetchALLProducts, removeErrors, removeSuccess } from "../features/Admin/adminSlice";
 import {toast} from 'react-toastify'
 import Loader from '../components/Loader'
+import { useState } from "react";
+import CircularProgress from "@mui/material/CircularProgress";
 const ProductList = () => {
-  const { products, loading, error } = useSelector((state) => state.admin);
+  const { products, loading, error, deleteLoading } = useSelector((state) => state.admin);
+
+  const [deletingId, setDeletingId] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -38,6 +42,24 @@ const ProductList = () => {
 
     )
     
+  }
+
+  function handleDelete(id){
+    const isConfirmed = window.confirm('Are You Sure You Want To Delete This Product')
+
+    if(isConfirmed){
+      setDeletingId(id); // mark this product as deleting
+      dispatch(deleteProduct({id})).then((action)=>{
+        if(action.type==`admin/deleteProduct/fulfilled`){
+          toast.success("Product Deleted Successfully", {autoClose:2000})
+          dispatch(removeSuccess())
+        }else if (action.type === "admin/deleteProduct/rejected") {
+          toast.error(action.payload?.message || "Delete failed");
+        }
+        setDeletingId(null);
+      })
+    }
+
   }
   return (
     <div>
@@ -81,12 +103,7 @@ const ProductList = () => {
                   >
                     <Edit />
                   </Link>
-                  <Link
-                    to={`/admin/product/${item._id}`}
-                    className="action-icon delete-icon"
-                  >
-                    <Delete />
-                  </Link>
+                 <button className="action-icon delete-icon" onClick={()=> handleDelete(item._id)}  disabled={deleteLoading}>{deletingId === item._id ? <CircularProgress size={20} /> : <Delete />}</button>
                 </td>
               </tr>
             ))}
