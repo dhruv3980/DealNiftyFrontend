@@ -55,10 +55,11 @@ export const getorderDetails=createAsyncThunk('order/getorderDetails', async(ord
         }
         const {data} = await axios.get(`${link}/order/${orderID}`,options)
         
+        
         return data;
         
     } catch (error) {
-        console.error("Axios error response data:", error.response?.data); 
+       
         return rejectWithValue(error.response?.data || {message:"order Not Found"})
     }
 

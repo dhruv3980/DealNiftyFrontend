@@ -1,9 +1,10 @@
-import React from "react";
+import React  from "react";
 import "../AdminStyles/Dashboard.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Pagetitle from "../components/Pagetitle";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import {
   AddBox,
   AttachMoney,
@@ -17,9 +18,71 @@ import {
   Instagram,
   LinkedIn,
   YouTube,
+  GitHub,
 } from "@mui/icons-material";
 
+import { fetchALLOrders, fetchALLProducts, removeErrors, removeSuccess } from "../features/Admin/adminSlice";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+
+
+
 const Dashboard = () => {
+  const [githubdata, setgithubdata] = useState('');
+  const {products, orders, success, error, loading, totalamount}=useSelector(state=>state.admin);
+
+  const dispatch = useDispatch()
+
+  useEffect(()=>{
+
+    dispatch(fetchALLProducts());
+
+    dispatch(fetchALLOrders());
+
+
+  }, [dispatch])
+
+  useEffect(()=>{
+    if(error){
+      dispatch(removeErrors());
+    }
+    if(success){
+      dispatch(removeSuccess());
+    }
+  }, [dispatch, error, success]);
+
+
+
+  
+  const TotalProducts = products?.length||0;
+
+  const TotalOrders = orders?.length||0;
+
+  const outOfStock = products?.filter(product=>product.stock<1).length||0;
+
+  const inStock = TotalProducts-outOfStock||0;
+
+  const TotalReviews = products?.reduce((acc, product)=> acc+(product.reviews.length)||0, 0);
+
+  
+
+
+    useEffect(() => {
+    const fetchGithubData = async () => {
+      try {
+        const response = await axios.get("https://api.github.com/users/dhruv3980");
+        setgithubdata(response.data); // Save the data in state
+      } catch (err) {
+        console.error("Error fetching GitHub data:", err);
+      }
+    };
+
+    fetchGithubData();
+  }, []);
+
+  console.log(githubdata);
+  
+
   return (
     <>
       <Navbar />
@@ -64,7 +127,7 @@ const Dashboard = () => {
 
             <div className="nav-section">
               <h3>Reviews</h3>
-              <Link to="/admin/reviewId">
+              <Link to="/admin/reviews">
                 <Star className="nav-icon" />
                 All Reviews
               </Link>
@@ -77,63 +140,63 @@ const Dashboard = () => {
             <div className="stat-box">
               <Inventory className="icon" />
               <h3>Total Products</h3>
-              <p>4</p>
+              <p>{TotalProducts}</p>
             </div>
 
             <div className="stat-box">
               <ShoppingCart className="icon" />
               <h3>Total Orders</h3>
-              <p>4</p>
+              <p>{TotalOrders}</p>
             </div>
 
             <div className="stat-box">
               <Star className="icon" />
               <h3>Total Reviews</h3>
-              <p>4</p>
+              <p>{TotalReviews}</p>
             </div>
 
             <div className="stat-box">
               <AttachMoney className="icon" />
               <h3>Total Revenue</h3>
-              <p>1500/-</p>
+              <p>{totalamount?.toFixed(2)||0}/-</p>
             </div>
 
             <div className="stat-box">
               <ErrorOutline className="icon" />
               <h3>Out Of Stocks</h3>
-              <p>2</p>
+              <p>{outOfStock}</p>
             </div>
 
             <div className="stat-box">
               <CheckCircle className="icon" />
               <h3>In Stocks</h3>
-              <p>4</p>
+              <p>{inStock}</p>
             </div>
 
           </div>
 
           <div className="social-stats">
-            <div className="social-box instagram">
+            {/* <div className="social-box instagram">
               <Instagram/>
                 <h3>Instagram</h3>
                 <p>123K Followers</p>
                 <p> 12 posts</p>
 
-            </div>
+            </div> */}
 
              <div className="social-box linkedIn">
                 <LinkedIn/>
                 <h3>Linkedin</h3>
-                <p>1K Followers</p>
-                <p> 12 posts</p>
+                <p>996 Followers</p>
+                <p> 70 posts</p>
 
             </div>
 
              <div className="social-box youtube">
-                <YouTube/>
-                <h3>Youtube</h3>
-                <p>123K Followers</p>
-                <p> 12 posts</p>
+                <GitHub/>
+                <h3>Github</h3>
+                <p><b>UserName :</b>{githubdata?.login}</p>
+                <p> <b>Repos : </b>{githubdata?.public_repos}</p>
 
             </div>
           </div>

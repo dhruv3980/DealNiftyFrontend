@@ -14,7 +14,7 @@ const Profile = () => {
   
     
     const {loading, user, isAuthenticated} = useSelector(state=>state.user)
-    console.log(loading, user, isAuthenticated);
+    // console.log(loading, user, isAuthenticated);
 
     
     

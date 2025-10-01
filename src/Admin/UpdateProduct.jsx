@@ -79,10 +79,10 @@ useEffect(() => {
             return;
         }
 
-        if(images.length === 0){
-            toast.error("Please select at least one image", {autoClose:2000});
-             return;
-        }
+        // if(images.length === 0){
+        //     toast.error("Please select at least one image", {autoClose:2000});
+        //      return;
+        // }
 
         const myform = new FormData()
         myform.set('name', name)
@@ -160,7 +160,7 @@ useEffect(() => {
 
             <div className='update-product-old-images-wrapper'>
                {oldImage && oldImage.map((img, idx)=>(
-                <img src={img.url} alt="old Product preview" className='update-product-old-image' key={idx}/>
+                <img src={img?.url} alt="old Product preview" className='update-product-old-image' key={idx}/>
 
                ))} 
            </div>

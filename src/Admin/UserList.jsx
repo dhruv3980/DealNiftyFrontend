@@ -4,36 +4,67 @@ import Navbar from "../components/Navbar";
 import Pagetitle from "../components/Pagetitle";
 import Footer from "../components/Footer";
 import { Delete, Edit } from "@mui/icons-material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { fetchALLUsers, removeErrors, removeSuccess } from "../features/Admin/adminSlice";
+import { deleteUser, fetchALLUsers, removeErrors, removeSuccess, removemessage } from "../features/Admin/adminSlice";
 import { toast } from "react-toastify";
 import Loader from "../components/Loader";
 const UserList = () => {
-    const {loading, error, users, success} = useSelector(state=>state.admin)
+  const {loading, error, users, success, message} = useSelector(state=>state.admin)
     const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     useEffect(()=>{
         dispatch(fetchALLUsers());
     }, [dispatch])
 
 
-    useEffect(()=>{
-        if(error){
-            toast.error(error, {autoClose:2000})
-            dispatch(removeErrors())
-        }
-        if(success){
-            dispatch(removeSuccess())
+    useEffect(() => {
+  // Fetch users initially
+  dispatch(fetchALLUsers());
 
-        }
+  // Handle errors & success messages
+}, [dispatch, success, message, error]);
 
-    }, [dispatch, error, success])
+useEffect(() => {
+  if (error) {
+    toast.error(error, { autoClose: 2000 });
+    dispatch(removeErrors());
+  }
+
+  if (success || message) {
+    // Refresh user list after delete/update
+    dispatch(fetchALLUsers());
+
+    if (message) {
+      toast.info(message, { autoClose: 2000 });
+      dispatch(removemessage());
+    }
+
+    dispatch(removeSuccess());
+  }
+}, [error, success, message, dispatch]);
+
+
+   
 
     if(loading){
         return <Loader/>
     }
+   
+
+
+    function handleDelete(id){
+      const confirm = window.confirm("Are You sure you want to delete this user")
+      // console.log(confirm)
+      
+      if(confirm){
+        
+        dispatch(deleteUser({id}))
+      }
+    }
+
 
   return (
     <div>
@@ -66,7 +97,7 @@ const UserList = () => {
                     <td>{new Date(user.createdAt).toLocaleDateString()}</td>
                     <td>    
                         <Link to={`/admin/user/${user._id}` }className='action-icon edit-icon'><Edit/></Link>
-                        <button className="action-icon delete-icon"><Delete/></button>
+                        <button className="action-icon delete-icon" onClick={()=>handleDelete(user._id)}><Delete/></button>
                     </td>
                 </tr>
                 ))

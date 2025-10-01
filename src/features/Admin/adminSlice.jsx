@@ -2,6 +2,7 @@ import { fabClasses } from "@mui/material/Fab";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
+
 const link = import.meta.env.VITE_API_URL;
 
 // fetch all products
@@ -148,7 +149,91 @@ export const changeUserRole = createAsyncThunk('admin/changeUserRole', async({id
   }
 })
 
+// delete user
+export const deleteUser = createAsyncThunk('admin/DeleteUser', async({id}, {rejectWithValue})=>{
+  try {
+ 
+    const config = {
+      withCredentials:true
+    }
+    const {data} = await axios.delete(`${link}/admin/user/${id}`, config)
+    return data;
 
+  } catch (error) {
+    return rejectWithValue(error.response?.data || {message:"User Deletion Failed"})
+    
+  }
+})
+
+// fetch all orders
+
+export const fetchALLOrders = createAsyncThunk('admin/fetchOrders', async(_,{rejectWithValue})=>{
+  try {
+    const {data} = await axios.get(`${link}/admin/orders`, {withCredentials:true})
+
+    return data;
+    
+  } catch (error) {
+    return rejectWithValue(error.response?.data||{message:"Something wrong while fetching the orders"})
+
+    
+  }
+})
+
+
+// delete order
+export const deleteOrder = createAsyncThunk('deleteOrder', async(id, {rejectWithValue})=>{
+  try {
+    const {data} = await axios.delete(`${link}/admin/order/${id}`, {withCredentials:true})
+
+    return data
+  } catch (error) {
+    return rejectWithValue(error.response?.data || "Something Wrong while deleting the order")
+    
+  }
+})
+
+// update order status
+export const updateOrderStatus=createAsyncThunk('updateOrderstatus', async({id, status}, {rejectWithValue})=>{
+
+  try {
+
+    const {data} = await axios.put(`${link}/admin/order/${id}`,{status}, {withCredentials:true});
+
+    return data;
+    
+  } catch (error) {
+    return rejectWithValue (error.response?.data||{message:"Something wrong while updating the status"});
+    
+  }
+
+})
+
+// fetch prodcuct reviews
+export const fetchProductReviews = createAsyncThunk('admin/fetchProductReview', async(id, {rejectWithValue})=>{
+
+  try {
+    const {data} = await axios.get(`${link}/reviews?id=${id}`, {withCredentials:true})
+
+    return data;
+    
+  } catch (error) {
+    return rejectWithValue(error.response?.data||{message:"Something wrong while fetching reviews"})
+    
+  }
+})
+
+// delete reviews
+
+export const deleteReviews = createAsyncThunk('admin/deleteReviews', async({reviewid, productid}, {rejectWithValue})=>{
+  try{
+    const {data} = await axios.delete(`${link}/reviews?reviewid=${reviewid}&productid=${productid}`, {withCredentials:true})
+
+    return data;
+  }catch(error){
+    return rejectWithValue(error.response?.data||{message:"Try again later something wrong while deleting reviews"})
+  }
+})
 const adminSlice = createSlice({
   name: "admin",
   initialState: {
@@ -159,7 +244,11 @@ const adminSlice = createSlice({
     product:{},
     deleteLoading:false,
     users:[],
-    user:{}
+    user:{},
+    message:null,
+    orders:[],
+    totalamount:0, 
+    reviews:[]
 
   },
 
@@ -170,6 +259,9 @@ const adminSlice = createSlice({
     removeSuccess: (state) => {
       state.success = false;
     },
+    removemessage:(state)=>{
+      state.message=null;
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -226,7 +318,7 @@ const adminSlice = createSlice({
         state.deleteLoading=false;
         state.products = state.products.filter(product=>product._id!==action.payload?.data)
         
-        state.products.filter(product=>console.log(product._id!==action?.payload))
+        
       })
       .addCase(deleteProduct.rejected, (state, action)=>{
         state.deleteLoading=false;
@@ -274,9 +366,98 @@ const adminSlice = createSlice({
         state.error=action.payload?.message||"Something wrong while update the role"
         state.loading=false;
       })
+
+      // delete user
+      .addCase(deleteUser.pending, (state)=>{
+        state.loading=true;
+        state.error=null;
+      })
+      .addCase(deleteUser.fulfilled, (state, action)=>{
+        state.loading=false;
+        state.message=action.payload?.message||"User Deleted Successfully"
+      })
+      .addCase(deleteUser.rejected, (state, action)=>{
+        state.loading=false;
+        state.error=action.payload?.message
+      })
+
+      // fetch orders
+      .addCase(fetchALLOrders.pending, (state)=>{
+        state.loading=true
+        state.error=null
+      })
+      .addCase(fetchALLOrders.fulfilled, (state, action)=>{
+        state.loading=false
+        state.orders=action.payload?.data.orders
+       state.totalamount=action.payload?.data?.totalammount
+      })
+      .addCase(fetchALLOrders.rejected, (state, action)=>{
+        state.error=action.payload?.message||"Something wrong while fetching the orders"
+        state.loading=false
+      } )
+
+      //deleteorder
+      .addCase(deleteOrder.pending, (state)=>{
+        state.loading=true;
+        state.error=null
+      })
+      .addCase(deleteOrder.fulfilled,(state,action)=>{
+        state.loading=false;
+        state.message=action.payload?.data;
+        state.success=action.payload?.success
+      })
+      .addCase(deleteOrder.rejected, (state, action)=>{
+        state.error=action.payload?.message||"Something wrong while deleting the order"
+        state.loading=false
+      })
+
+      // updateOrderstatus
+      .addCase(updateOrderStatus.pending, (state)=>{
+        state.loading=true;
+        state.error=null;
+      })
+      .addCase(updateOrderStatus.fulfilled, (state, action)=>{
+        state.loading=false;
+        state.success=true;
+      })
+      .addCase(updateOrderStatus.rejected, (state, action)=>{
+        state.loading=false;
+        state.error=action?.payload?.message||"something wrong while update the order status"
+      })
+
+      // get all reviews
+      .addCase(fetchProductReviews.pending, (state)=>{
+        state.loading=true;
+        state.error=null;
+
+      })
+      .addCase(fetchProductReviews.fulfilled, (state, action)=>{
+        state.loading=false;
+        state.reviews=action.payload?.data;
+        state.success=true
+      })
+      .addCase(fetchProductReviews.rejected, (state)=>{
+        state.loading=false;
+        state.error=action.payload?.message||"Something wrong while fetching reviews"
+      })
+      //deleting reviews
+
+      .addCase(deleteReviews.pending, (state)=>{
+        state.loading=true;
+        state.error=null;
+      })
+      .addCase(deleteReviews.fulfilled, (state, action)=>{
+        state.loading=false;
+        state.loading=true;
+        state.message=action.payload?.message||"Review deleted successfully"
+      })
+      .addCase(deleteReviews.rejected, (state, action)=>{
+        state.loading=false;
+        state.error=action.payload?.message||"Something wrong while deleting the review"
+      })
   },
 });
 
-export const { removeErrors, removeSuccess } = adminSlice.actions;
+export const { removeErrors, removeSuccess, removemessage } = adminSlice.actions;
 
 export default adminSlice.reducer;

@@ -19,7 +19,7 @@ const UpdateProfile = () => {
     (state) => state.user
   );
 
-  console.log(loading, success, message, user, error);
+  // console.log(loading, success, message, user, error);
 
   useEffect(() => {
     if (user) {

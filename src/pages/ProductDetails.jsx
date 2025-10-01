@@ -19,7 +19,8 @@ import {
   Additemtocart,
   removeError,
 } from "../features/Cart/cartSlice";
-import { createReview } from "../features/products/Product.Slice";
+import { createReview, removeSuccess as removesuccessproduct } from "../features/products/Product.Slice";
+import Products from "./Products";
 const ProductDetails = () => {
   const [userRating, setUserRating] = useState(0);
   const { product, loading, error, reviewSuccess, reviewLoading } = useSelector(
@@ -39,7 +40,7 @@ const ProductDetails = () => {
   const [comment, setComment] = useState("");
   const [selectingImage, setSelectingImage]=useState("")
 
-  console.log(product)
+  
 
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -116,6 +117,8 @@ const ProductDetails = () => {
         productid: id,
       })
     );
+
+    dispatch(removesuccessproduct())
   };
 
   useEffect(() => {
@@ -123,7 +126,7 @@ const ProductDetails = () => {
       toast.success("Review Submitting Successfully", { autoClose: 2000 });
       setUserRating(0);
       setComment("");
-      dispatch(removeSuccess());
+      dispatch(removesuccessproduct());
       dispatch(getProductDetail(id));
     }
   }, [dispatch, reviewSuccess, id]);
@@ -146,7 +149,8 @@ const ProductDetails = () => {
     );
   }
 
-  console.log(selectingImage)
+ 
+
   return (
     <>
       <Pagetitle title={`${product.name}-Details`} />
@@ -162,6 +166,7 @@ const ProductDetails = () => {
             />
            {product.images?.length>1 && <div className="product-thumbnails">
               {
+               
                 product && product.images && 
                 product.images.map((img, idx)=>(
                   <img src={img.url} alt="thumbnail" className='thumbnail-image' onClick={e=>setSelectingImage(e.target.src)} />

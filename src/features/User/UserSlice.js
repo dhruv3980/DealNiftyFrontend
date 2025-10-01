@@ -252,7 +252,7 @@ export const userSlice = createSlice({
         state.loading = false;
         state.isAuthenticated = false;
         state.success = false;
-        console.log(state.error); /////////////
+        
       });
 
     builder

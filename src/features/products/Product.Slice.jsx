@@ -37,6 +37,7 @@ export const getProductDetail = createAsyncThunk(
       const { data } = await axios.get(link);
       return data;
     } catch (error) {
+
       return rejectWithValue(
         error.response?.data || { message: "An Error Occured" }
       );
