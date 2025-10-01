@@ -31,7 +31,7 @@
 
 ## Live Demo
 
-Check out the live frontend here: [DealNifty]([https://dealnifty.netlify.app]
+Check out the live frontend here: [DealNifty](https://dealnifty.netlify.app)
 
 ---
 
