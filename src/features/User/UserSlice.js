@@ -12,6 +12,7 @@ export const login = createAsyncThunk(
     const options = {
       headers: {
         "Content-Type": "application/json",
+       
       },
 
       withCredentials: true,
@@ -47,6 +48,7 @@ export const register = createAsyncThunk(
       const config = {
         headers: {
           "Content-Type": "multipart/form-data",
+          
         },
         withCredentials: true,
       };
@@ -78,7 +80,8 @@ export const getProfile = createAsyncThunk(
   async (__, { rejectWithValue }) => {
     try {
       const { data } = await axios.get(`${link}/profile`, {
-        withCredentials: true,
+       
+        withCredentials: true, 
       });
       return data;
     } catch (error) {
@@ -109,7 +112,8 @@ export const updateProfile = createAsyncThunk('updateprofile',async(userData, {r
   try{
     const option={
       headers:{
-        "Content-Type":"multipart/form-Data"
+        "Content-Type":"multipart/form-Data",
+        
       },
      withCredentials: true,
 
@@ -131,6 +135,7 @@ export const updatePassword = createAsyncThunk('updatPassword', async(formData, 
     const options={
       headers: {
         "Content-Type": "application/json",
+       
       },
       withCredentials:true
     }
@@ -149,7 +154,8 @@ export const sendtoken = createAsyncThunk('sendToken', async(myformdata, {reject
   try{
     const options={
       headers:{
-        "Content-Type":'application/json'
+        "Content-Type":'application/json',
+       
       }
     }
     const {data} = await axios.post(`${link}/password/forgot`, myformdata, options);
@@ -168,7 +174,8 @@ export const changePassword = createAsyncThunk('changePassword', async({password
   try{
     const options = {
       headers:{
-        "Content-Type":'application/json'
+        "Content-Type":'application/json',
+        
       },
       withCredentials:true
     }
