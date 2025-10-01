@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Pagetitle from "../components/Pagetitle";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import "../pageStyles/products.css";
+import "../pageStyles/Products.css";
 import { useDispatch, useSelector } from "react-redux";
 import Product from "../components/Product";
 import { getProduct, removeErrors } from "../features/products/Product.Slice";
