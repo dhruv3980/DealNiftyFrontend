@@ -1,12 +1,44 @@
-# React + Vite
+# DealNifty Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![React](https://img.shields.io/badge/React-18.0-blue?logo=react) 
+![Vite](https://img.shields.io/badge/Vite-4.0-brightgreen?logo=vite) 
+![Netlify](https://img.shields.io/badge/Deploy-Netlify-00C7B7?logo=netlify)
 
-Currently, two official plugins are available:
+**DealNifty Frontend** is a modern, responsive e-commerce frontend built with **React** and **Vite**. It provides a fast, interactive shopping experience for users to browse products, search, filter, and manage their cart seamlessly.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Dynamic product listings with search and filters  
+- Responsive design for desktop, tablet, and mobile devices  
+- Client-side routing using **React Router** for fast navigation  
+- Integration with backend APIs for products, users, and cart management  
+- Optimized performance with **Vite** and Hot Module Replacement (HMR)  
+- Clean and user-friendly interface for smooth shopping experience  
+- SPA routing handled via `_redirects` for proper page refresh support on Netlify  
+
+---
+
+## Tech Stack
+
+- **React** – Frontend framework  
+- **Vite** – Build tool for fast development  
+- **CSS / SCSS** – Styling  
+- **Netlify** – Deployment  
+
+---
+
+## Live Demo
+
+Check out the live frontend here: [DealNifty](https://dealnifty.netlify.app)
+
+---
+
+## Contributing
+
+Contributions are welcome! Open issues or submit pull requests to improve the project.  
+
+---
+
+
